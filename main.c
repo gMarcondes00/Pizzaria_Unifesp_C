@@ -20,6 +20,7 @@ typedef struct {
 //ADMIN (pizzaria)
 void pizzariaSis(); //Função para alterar dados de pizzas e questões da entrega. Função para *ADMIN* 
 int cadastroPizza(PIZZAS *pizza, int *tamanho); //Função para o cadastro de pizzas
+int alterarPizza(PIZZAS *pizza,int *tamanho, int idAlt); //Função para alterar o cadastro de uma pizza
 //USUARIO (cliente)
 void clienteSis(); //Função para cadastrar clientes e fazer pedidos
 
@@ -50,7 +51,7 @@ int main (){
 void pizzariaSis(){
     PIZZAS pizza[10];
 
-    int escolha, cadastrar, tamanho = 0;
+    int escolha, cadastrar, tamanho = 0, id, alterar;
     bool ficar = true;
     
     while(ficar){
@@ -65,7 +66,13 @@ void pizzariaSis(){
             }
             break;
         case 2:
-            //alterarPizza();
+            printf("Insira o id da pizza que gostaria de alterar: ");
+            scanf("%d", &id);
+            getchar();
+            alterar = alterarPizza(pizza, &tamanho, id);
+            if(alterar) {
+                printf("Alteracao realizada com sucesso!");
+            }
             break;
         case 3:
             //removerPizza();
@@ -95,7 +102,7 @@ void pizzariaSis(){
         printf("Testando: %d\n", pizza[i].id);
     }
 }
-
+//Cadastrar pizza
 int cadastroPizza(PIZZAS *pizza, int *tamanho){ 
     int id;
     printf("Qual o id da nova pizza?");
@@ -125,6 +132,29 @@ int cadastroPizza(PIZZAS *pizza, int *tamanho){
     (*tamanho)++;
     return 1;
 }
+//Altera pizza pelo ID
+int alterarPizza(PIZZAS *pizza,int *tamanho, int idAlt){
+    for(int i = 0; i < *tamanho; i++) {
+        if(pizza[i].id == idAlt){
+            printf("Qual o novo nome da pizza?");
+            fgets(pizza[i].nome,10,stdin);
+            getchar();
+    
+            printf("Qual o novo valor da pizza?");
+            scanf("%f", &pizza->valor);
+            getchar();
+
+            printf("Qual a nova descricao da pizza?");
+            fgets(pizza[i].desc, 25, stdin);
+            getchar();
+            return 1;
+        }
+    }
+    return 0;
+} 
+// ----------------------------
+//        Seção Cliente
+// ----------------------------
 //Função para escolher as opções em Cliente
 void clienteSis(){
     CLIENTES cliente;
@@ -160,7 +190,3 @@ void clienteSis(){
         }
     }
 }
-
-// ----------------------------
-//        Seção Cliente
-// ----------------------------
