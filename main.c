@@ -25,6 +25,7 @@ int removerPizza(PIZZAS *pizza,int *tamanho, int idRem); //Função remover pizz
 
 //USUARIO (cliente)
 void clienteSis(); //Função para cadastrar clientes e fazer pedidos
+int cadastroCliente(CLIENTES *cliente, int *tamanho); //Função para cadastrar os clientes
 
 int main (){
     PEDIDOS pedido;
@@ -179,14 +180,19 @@ int removerPizza(PIZZAS *pizza,int *tamanho, int idRem){
 // ----------------------------
 //Função para escolher as opções em Cliente
 void clienteSis(){
-    CLIENTES cliente;
+    CLIENTES cliente[100];
+
+    int tel, cadastrar, tamanho = 0, alterar, remover;
     int escolha;
     bool ficar = true;
     scanf("%d", &escolha);
     while(ficar){
         switch(escolha){
         case 1:
-            //cadastroCliente();
+            cadastrar = cadastroCliente(&tamanho, cliente); 
+            if(cadastrar){
+                printf("Cliente cadastrado com sucesso!");
+            }
             break;
         case 2:
             //alterarCliente();
@@ -211,4 +217,41 @@ void clienteSis(){
             break;
         }
     }
+}
+
+//Função cadastrar cliente
+int cadastroCliente(CLIENTES *cliente, int *tamanho) {
+    int tel;
+    printf("Qual o telefone do cliente?");
+    scanf("%d", &tel);
+    getchar();
+    //Verificar se há algum telefone igual
+    for(int i = 0; i < *tamanho; i++){
+        if(cliente[i].tel == tel){
+            printf("Telefone ja cadastrado!");
+            return 0;
+        }
+    }
+    //Feita a verificação, associar os valores do cliente
+    cliente[*tamanho].tel = tel;
+    printf("Qual o nome do cliente?");
+    scanf("%[^\n]", &cliente[*tamanho].nome);
+    getchar();
+    
+    printf("Qual a cidade do cliente?");
+    scanf("%f", &cliente[*tamanho].cid);
+    getchar();
+
+    printf("Qual a rua do cliente?");
+    scanf("%[^\n]", &cliente[*tamanho].rua);
+    getchar();
+
+    printf("Qual o bairro do cliente?");
+    scanf("%[^\n]", &cliente[*tamanho].bairro);
+    getchar();
+
+    (*tamanho)++;
+    return 1;    
+
+    return 0;
 }
