@@ -21,6 +21,8 @@ typedef struct {
 void pizzariaSis(); //Função para alterar dados de pizzas e questões da entrega. Função para *ADMIN* 
 int cadastroPizza(PIZZAS *pizza, int *tamanho); //Função para o cadastro de pizzas
 int alterarPizza(PIZZAS *pizza,int *tamanho, int idAlt); //Função para alterar o cadastro de uma pizza
+int removerPizza(PIZZAS *pizza,int *tamanho, int idRem); //Função remover pizza a partir de ID
+
 //USUARIO (cliente)
 void clienteSis(); //Função para cadastrar clientes e fazer pedidos
 
@@ -51,7 +53,7 @@ int main (){
 void pizzariaSis(){
     PIZZAS pizza[10];
 
-    int escolha, cadastrar, tamanho = 0, id, alterar;
+    int escolha, cadastrar, tamanho = 0, id, alterar, remover;
     bool ficar = true;
     
     while(ficar){
@@ -75,7 +77,13 @@ void pizzariaSis(){
             }
             break;
         case 3:
-            //removerPizza();
+            printf("Qual o id da pizza que gostaria de remover?");
+            scanf("%d", &id);
+            getchar();
+            remover = removerPizza(pizza, &tamanho,id);
+            if(remover) {
+                printf("Remocao realizada com sucesso!");
+            }
             break;
         case 4:
             //despachoPizza();
@@ -152,6 +160,20 @@ int alterarPizza(PIZZAS *pizza,int *tamanho, int idAlt){
     }
     return 0;
 } 
+//Remover pizza pelo ID
+int removerPizza(PIZZAS *pizza,int *tamanho, int idRem){
+    for(int i = 0; i < *tamanho; i++) {
+        if(pizza[i].id == idRem){
+            pizza[i].id = 0;
+            strcpy(pizza[i].nome, "");
+            strcpy(pizza[i].desc, "");
+            return 1;
+        }
+    }
+
+    return 0;
+}   
+
 // ----------------------------
 //        Seção Cliente
 // ----------------------------
