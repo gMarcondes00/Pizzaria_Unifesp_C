@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 //Definindo as structs a serem utilizadas
 typedef struct {
     int tel, numCasa;
     char nome[10], cid[25], rua[25], bairro[25];
-}CLIENTES;
+}CLIENTES; CLIENTES cliente[100];
 
 typedef struct {
     int id;
     float valor;
     char nome[10];
     char desc[25];
-}PIZZAS;
+}PIZZAS; PIZZAS pizza[10];
 
 typedef struct {
     int id, idPizza, idEntrega, situ, telC, nota;
@@ -26,7 +27,8 @@ int removerPizza(PIZZAS *pizza,int *tamanho, int idRem); //Função remover pizz
 //USUARIO (cliente)
 void clienteSis(); //Função para cadastrar clientes e fazer pedidos
 int cadastroCliente(CLIENTES *cliente, int *tamanho); //Função para cadastrar os clientes
-int alterarCliente(CLIENTES *cliente,int *tamanho, int telC); //Função para alterar dados do cliente
+int alterarCliente(CLIENTES *cliente,int *tamanho, int telAlt); //Função para alterar dados do cliente
+int removerCliente(CLIENTES *cliente, int *tamanho, int telRem); //Função para remover cliente a partir de ID
 
 int main (){
     PEDIDOS pedido;
@@ -53,8 +55,6 @@ int main (){
 // ----------------------------
 //Função para escolher as opções em Pizzaria
 void pizzariaSis(){
-    PIZZAS pizza[10];
-
     int escolha, cadastrar, tamanho = 0, id, alterar, remover;
     bool ficar = true;
     
@@ -128,7 +128,7 @@ int cadastroPizza(PIZZAS *pizza, int *tamanho){
     //Feita a verificação, alocar os novos valores
     pizza[*tamanho].id = id;
     printf("Qual o nome da pizza?");
-    scanf("%[^\n]", &pizza[*tamanho].nome);
+    scanf("%[^\n]", pizza[*tamanho].nome);
     getchar();
     
     printf("Qual o valor da pizza?");
@@ -136,7 +136,7 @@ int cadastroPizza(PIZZAS *pizza, int *tamanho){
     getchar();
 
     printf("Qual a descricao da pizza?");
-    scanf("%[^\n]", &pizza[*tamanho].desc);
+    scanf("%[^\n]", pizza[*tamanho].desc);
     getchar();
 
     (*tamanho)++;
@@ -181,8 +181,6 @@ int removerPizza(PIZZAS *pizza,int *tamanho, int idRem){
 // ----------------------------
 //Função para escolher as opções em Cliente
 void clienteSis(){
-    CLIENTES cliente[100];
-
     int tel, cadastrar, tamanho = 0, alterar, remover;
     int escolha;
     bool ficar = true;
@@ -190,7 +188,7 @@ void clienteSis(){
     while(ficar){
         switch(escolha){
         case 1:
-            cadastrar = cadastroCliente(&tamanho, cliente); 
+            cadastrar = cadastroCliente(cliente, &tamanho); 
             if(cadastrar){
                 printf("Cliente cadastrado com sucesso!");
             }
@@ -204,7 +202,12 @@ void clienteSis(){
             }
             break;
         case 3:
-            //removerCliente();
+            printf("Qual o numero do cliente que gostaria de remover?");
+            scanf("%d", &tel);
+            remover = removerCliente(cliente, &tamanho, tel);
+            if(remover){
+                printf("Removido com sucesso");
+            }
             break;
         case 4:
             //menuPizzas();
@@ -241,19 +244,19 @@ int cadastroCliente(CLIENTES *cliente, int *tamanho) {
     //Feita a verificação, associar os valores do cliente
     cliente[*tamanho].tel = tel;
     printf("Qual o nome do cliente?");
-    scanf("%[^\n]", &cliente[*tamanho].nome);
+    scanf("%[^\n]", cliente[*tamanho].nome);
     getchar();
     
     printf("Qual a cidade do cliente?");
-    scanf("%f", &cliente[*tamanho].cid);
+    scanf("%[^\n]", cliente[*tamanho].cid);
     getchar();
 
     printf("Qual a rua do cliente?");
-    scanf("%[^\n]", &cliente[*tamanho].rua);
+    scanf("%[^\n]", cliente[*tamanho].rua);
     getchar();
 
     printf("Qual o bairro do cliente?");
-    scanf("%[^\n]", &cliente[*tamanho].bairro);
+    scanf("%[^\n]", cliente[*tamanho].bairro);
     getchar();
 
     printf("Qual o numero da casa?");
@@ -266,23 +269,23 @@ int cadastroCliente(CLIENTES *cliente, int *tamanho) {
     return 0;
 }
 //Alterar dados do cliente
-int alterarCliente(CLIENTES *cliente,int *tamanho, int telC) {
+int alterarCliente(CLIENTES *cliente,int *tamanho, int telAlt) {
     for(int i = 0; i < *tamanho; i++) {
-        if(cliente[i].tel == telC){
+        if(cliente[i].tel == telAlt){
             printf("Qual o nome do cliente?");
-            scanf("%[^\n]", &cliente[i].nome);
+            scanf("%[^\n]", cliente[i].nome);
             getchar();
     
             printf("Qual a cidade do cliente?");
-            scanf("%f", &cliente[i].cid);
+            scanf("%[^\n]", cliente[i].cid);
             getchar();
 
             printf("Qual a rua do cliente?");
-            scanf("%[^\n]", &cliente[i].rua);
+            scanf("%[^\n]", cliente[i].rua);
             getchar();
 
             printf("Qual o bairro do cliente?");
-            scanf("%[^\n]", &cliente[i].bairro);
+            scanf("%[^\n]", cliente[i].bairro);
             getchar();
 
             printf("Qual o novo valor da pizza?");
@@ -293,5 +296,20 @@ int alterarCliente(CLIENTES *cliente,int *tamanho, int telC) {
         }
     }   
 
+    return 0;
+}
+//Remover cliente
+int removerCliente(CLIENTES *cliente, int *tamanho, int telRem) {
+    for(int i = 0; i < *tamanho; i++) { // char nome[10], cid[25], rua[25], bairro[25];
+        if(cliente[i].tel == telRem){
+            cliente[i].tel = 0;
+            cliente[i].numCasa = 0;
+            strcpy(cliente[i].nome, "");
+            strcpy(cliente[i].cid, "");
+            strcpy(cliente[i].rua, "");
+            strcpy(cliente[i].bairro, "");
+            return 1;
+        }
+    }
     return 0;
 }
