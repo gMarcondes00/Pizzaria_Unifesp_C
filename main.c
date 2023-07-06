@@ -195,6 +195,7 @@ void despachoPizza(PEDIDOS *pedido, int *tamanho) {
             pedido[i].situ = 2;
         }
     }
+    printf("\nPedido Despachada\n");
 }
 
 void exibirEntrega(PEDIDOS *pedido, int *tamanho) {
@@ -215,7 +216,7 @@ void exibirEntrega(PEDIDOS *pedido, int *tamanho) {
 }
 //Exibir montate e total de pizzas vendidas
 void exibirMontante(int *venda,float *montante) {
-    printf("%d pizzas vendidas\n%f valor em caixa", *venda, *montante);
+    printf("\n%d pizzas vendidas\n%f valor em caixa", *venda, *montante);
 }
 // ----------------------------
 //        Seção Cliente
@@ -225,14 +226,15 @@ int clienteSis(){
     int tel, cadastrar, alterar, remover;
     int escolha;
     bool ficar = true;
-    scanf("%d", &escolha);
+    
     while(ficar){
         printf("Selecione uma das opcoes:\n1- Cadastrar cliente\n2- Alterar dados do cliente\n3- Remover um cliente\n4- Menu de pizzas\n5- Fazer um pedido\n6- Pedido recebido\n7- Sair\n\n");
+        scanf("%d", &escolha);
         switch(escolha){
         case 1:
             cadastrar = cadastroCliente(cliente, &tamanhoC); 
             if(cadastrar){
-                printf("Cliente cadastrado com sucesso!");
+                printf("Cliente cadastrado com sucesso!\n");
             }
             break;
         case 2:
@@ -240,7 +242,7 @@ int clienteSis(){
             scanf("%d", &tel);
             alterar = alterarCliente(cliente, &tamanhoC, tel);
             if(alterar) {
-                printf("Alterado com sucesso!");
+                printf("Alterado com sucesso!\n");
             }
             break;
         case 3:
@@ -248,7 +250,7 @@ int clienteSis(){
             scanf("%d", &tel);
             remover = removerCliente(cliente, &tamanhoC, tel);
             if(remover){
-                printf("Removido com sucesso");
+                printf("Removido com sucesso\n");
             }
             break;
         case 4:
@@ -401,6 +403,7 @@ int fazerPedido(PEDIDOS *pedido, PIZZAS *pizza, int *tamanhoPe, int *tamanhoPi, 
     }
     (*venda)++;
     (*tamanhoPe)++;
+    printf("\nPedido Realizado\n");
     return 0;
 }
 //Receber e dar uma nota ao pedido
@@ -416,4 +419,5 @@ void receberPedido(PEDIDOS *pedido, int *tamanho) {
             pedido[i].nota = nota;
         }
     }
+    printf("\nPedido Recebido\n");
 }
