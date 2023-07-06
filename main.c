@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 //Definindo as structs a serem utilizadas
 typedef struct {
     int tel, numCasa;
@@ -15,8 +16,8 @@ typedef struct {
 }PIZZAS; PIZZAS pizza[10]; int tamanhoP = 0;
 
 typedef struct {
-    int id, idPizza, idEntrega, situ, telC, nota;
-}PEDIDOS; PEDIDOS pedido[100];
+    int id, idPizza, entrega, situ, telC, nota;
+}PEDIDOS; PEDIDOS pedido[100]; int tamanhoPe = 0;
 //Definindo as funções a serem utilizadas
 //ADMIN (pizzaria)
 int pizzariaSis(); //Função para alterar dados de pizzas e questões da entrega. Função para *ADMIN* 
@@ -30,6 +31,7 @@ int cadastroCliente(CLIENTES *cliente, int *tamanho); //Função para cadastrar 
 int alterarCliente(CLIENTES *cliente,int *tamanho, int telAlt); //Função para alterar dados do cliente
 int removerCliente(CLIENTES *cliente, int *tamanho, int telRem); //Função para remover cliente a partir de ID
 void menuPizzas(PIZZAS *pizza, int *tamanho); //Função ver menu de pizzas ordenadas pelo ID
+int fazerPedido(PEDIDOS *pedido, int *tamanhoPe); //Função para fazer um pedido
 
 int main (){
     int escolha;
@@ -213,7 +215,7 @@ int clienteSis(){
             menuPizzas(pizza, &tamanhoP);
             break;
         case 5:
-            //fazerPedido();
+            fazerPedido(pedido, &tamanhoPe);
             break;
         case 6:
             //receberPedido();
@@ -336,4 +338,21 @@ void menuPizzas(PIZZAS *pizza, int *tamanho) {
         printf("Nome: %s\n", pizza[i].nome);
         printf("Descricao: %s\n", pizza[i].desc);
     }
+}
+
+int fazerPedido(PEDIDOS *pedido, int *tamanhoPe) {
+    int tel, idPizza;
+    printf("Qual o telefone do cliente? ");
+    scanf("%[^/n]", &tel);
+    printf("Qual o ID da pizza? ");
+    scanf("%d", &idPizza);
+    pedido[*tamanhoPe].telC = tel;
+    pedido[*tamanhoPe].idPizza = idPizza;
+    pedido[*tamanhoPe].situ = 1;
+    pedido[*tamanhoPe].entrega = 0;
+    pedido[*tamanhoPe].id = rand()%100;
+    pedido[*tamanhoPe].nota = 0;
+
+    *tamanhoPe++;
+    return 0;
 }
