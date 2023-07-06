@@ -33,7 +33,8 @@ int cadastroCliente(CLIENTES *cliente, int *tamanho); //Função para cadastrar 
 int alterarCliente(CLIENTES *cliente,int *tamanho, int telAlt); //Função para alterar dados do cliente
 int removerCliente(CLIENTES *cliente, int *tamanho, int telRem); //Função para remover cliente a partir de ID
 void menuPizzas(PIZZAS *pizza, int *tamanho); //Função ver menu de pizzas ordenadas pelo ID
-int fazerPedido(PEDIDOS *pedido, int *tamanhoPe); //Função para fazer um pedido
+int fazerPedido(PEDIDOS *pedido, int *tamanho); //Função para fazer um pedido
+void receberPedido(PEDIDOS *pedido, int *tamanho); //Função para dar uma nota ao pedido
 
 int main (){
     int escolha;
@@ -252,7 +253,7 @@ int clienteSis(){
             fazerPedido(pedido, &tamanhoPe);
             break;
         case 6:
-            //receberPedido();
+            receberPedido(pedido, &tamanhoPe);
             break;
         case 7:
             return escolha;
@@ -389,4 +390,18 @@ int fazerPedido(PEDIDOS *pedido, int *tamanho) {
 
     (*tamanho)++;
     return 0;
+}
+//Receber e dar uma nota ao pedido
+void receberPedido(PEDIDOS *pedido, int *tamanho) {
+    int id, nota;
+    printf("Qual o id do pedido recebido?");
+    scanf("%d", &id);
+    for(int i = 0; i < *tamanho; i++) {
+        if(id == pedido[i].id) {
+            pedido[i].situ = 3;
+            printf("Qual a nota a ser dada? ");
+            scanf("%d", &nota);
+            pedido[i].nota = nota;
+        }
+    }
 }
