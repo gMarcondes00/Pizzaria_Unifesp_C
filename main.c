@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include <stdlib.h>
 //Definindo as structs a serem utilizadas
 typedef struct {
     int tel, numCasa;
@@ -13,7 +12,7 @@ typedef struct {
     float valor;
     char nome[10];
     char desc[25];
-}PIZZAS; PIZZAS pizza[10]; int tamanhoP = 0;
+}PIZZAS; PIZZAS pizza[10]; int tamanhoP = 0, montante = 0;
 
 typedef struct {
     int id, idPizza, entrega, situ, telC, nota;
@@ -24,6 +23,8 @@ int pizzariaSis(); //Função para alterar dados de pizzas e questões da entreg
 int cadastroPizza(PIZZAS *pizza, int *tamanho); //Função para o cadastro de pizzas
 int alterarPizza(PIZZAS *pizza,int *tamanho, int idAlt); //Função para alterar o cadastro de uma pizza
 int removerPizza(PIZZAS *pizza,int *tamanho, int idRem); //Função remover pizza a partir de ID
+void despachoPizza(PEDIDOS *pedido, int *tamanho); //Função que apresenta num de pedidos 
+void exibirEntrega(PEDIDOS *pedido, int *tamanho); //Função para exibir as entregas a partir do id do entregador
 
 //USUARIO (cliente)
 int clienteSis(); //Função para cadastrar clientes e fazer pedidos
@@ -95,10 +96,10 @@ int pizzariaSis(){
             }
             break;
         case 4:
-            //despachoPizza();
+            despachoPizza(pedido, &tamanhoPe);
             break;
         case 5:
-            //exibirEntrega();
+            exibirEntrega();
             break;
         case 6:
             //exibirMontante();
@@ -176,7 +177,22 @@ int removerPizza(PIZZAS *pizza,int *tamanho, int idRem){
 
     return 0;
 }   
-
+//Despacho da pizza
+void despachoPizza(PEDIDOS *pedido, int *tamanho) {
+    int despache;
+    printf("Id dos Pedidos:\n");
+    for(int i = 0; i < *tamanho; i++) {
+        printf("%d\n", pedido[*tamanho]);
+    }
+    printf("Qual pedido despachar? ");
+    scanf("%d", &despache);
+    for(int i = 0; i < *tamanho; i++) {
+        if(despache == pedido[i].id){
+            pedido[i].entrega = rand() % 100;
+            pedido[i].situ = 2;
+        }
+    }
+}
 // ----------------------------
 //        Seção Cliente
 // ----------------------------
@@ -350,7 +366,7 @@ int fazerPedido(PEDIDOS *pedido, int *tamanhoPe) {
     pedido[*tamanhoPe].idPizza = idPizza;
     pedido[*tamanhoPe].situ = 1;
     pedido[*tamanhoPe].entrega = 0;
-    pedido[*tamanhoPe].id = rand()%100;
+    pedido[*tamanhoPe].id = *tamanhoPe;
     pedido[*tamanhoPe].nota = 0;
 
     *tamanhoPe++;
