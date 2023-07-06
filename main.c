@@ -5,18 +5,18 @@
 typedef struct {
     int tel, numCasa;
     char nome[10], cid[25], rua[25], bairro[25];
-}CLIENTES; CLIENTES cliente[100];
+}CLIENTES; CLIENTES cliente[100]; int tamanhoC = 0;
 
 typedef struct {
     int id;
     float valor;
     char nome[10];
     char desc[25];
-}PIZZAS; PIZZAS pizza[10];
+}PIZZAS; PIZZAS pizza[10]; int tamanhoP = 0;
 
 typedef struct {
     int id, idPizza, idEntrega, situ, telC, nota;
-}PEDIDOS;
+}PEDIDOS; PEDIDOS pedido[100];
 //Definindo as funções a serem utilizadas
 //ADMIN (pizzaria)
 void pizzariaSis(); //Função para alterar dados de pizzas e questões da entrega. Função para *ADMIN* 
@@ -29,10 +29,9 @@ void clienteSis(); //Função para cadastrar clientes e fazer pedidos
 int cadastroCliente(CLIENTES *cliente, int *tamanho); //Função para cadastrar os clientes
 int alterarCliente(CLIENTES *cliente,int *tamanho, int telAlt); //Função para alterar dados do cliente
 int removerCliente(CLIENTES *cliente, int *tamanho, int telRem); //Função para remover cliente a partir de ID
+void menuPizzas(PIZZAS *pizza, int *tamanho); //Função ver menu de pizzas ordenadas pelo ID
 
 int main (){
-    PEDIDOS pedido;
-
     int escolha;
     printf("Para acessar o sistema da pizzaria - 1\nPara acessar o sistema de clientes - 2\n\n");
     scanf("%d", &escolha);
@@ -55,7 +54,7 @@ int main (){
 // ----------------------------
 //Função para escolher as opções em Pizzaria
 void pizzariaSis(){
-    int escolha, cadastrar, tamanho = 0, id, alterar, remover;
+    int escolha, cadastrar, id, alterar, remover;
     bool ficar = true;
     
     while(ficar){
@@ -64,7 +63,7 @@ void pizzariaSis(){
         scanf("%d", &escolha);
         switch(escolha){
         case 1:
-            cadastrar = cadastroPizza(pizza, &tamanho);
+            cadastrar = cadastroPizza(pizza, &tamanhoP);
             if(cadastrar) {
                 printf("Cadastro realizado com sucesso!");
             }
@@ -73,7 +72,7 @@ void pizzariaSis(){
             printf("Insira o id da pizza que gostaria de alterar: ");
             scanf("%d", &id);
             getchar();
-            alterar = alterarPizza(pizza, &tamanho, id);
+            alterar = alterarPizza(pizza, &tamanhoP, id);
             if(alterar) {
                 printf("Alteracao realizada com sucesso!");
             }
@@ -82,7 +81,7 @@ void pizzariaSis(){
             printf("Qual o id da pizza que gostaria de remover?");
             scanf("%d", &id);
             getchar();
-            remover = removerPizza(pizza, &tamanho,id);
+            remover = removerPizza(pizza, &tamanhoP,id);
             if(remover) {
                 printf("Remocao realizada com sucesso!");
             }
@@ -105,7 +104,7 @@ void pizzariaSis(){
         }
     }
     printf("Teste");
-    for(int i = 0; i < tamanho; i++) {
+    for(int i = 0; i < tamanhoP; i++) {
         printf("Testando: %s\n", pizza[i].desc);
         printf("Testando: %s\n", pizza[i].nome);
         printf("Testando: %f\n", pizza[i].valor);
@@ -181,14 +180,14 @@ int removerPizza(PIZZAS *pizza,int *tamanho, int idRem){
 // ----------------------------
 //Função para escolher as opções em Cliente
 void clienteSis(){
-    int tel, cadastrar, tamanho = 0, alterar, remover;
+    int tel, cadastrar, alterar, remover;
     int escolha;
     bool ficar = true;
     scanf("%d", &escolha);
     while(ficar){
         switch(escolha){
         case 1:
-            cadastrar = cadastroCliente(cliente, &tamanho); 
+            cadastrar = cadastroCliente(cliente, &tamanhoC); 
             if(cadastrar){
                 printf("Cliente cadastrado com sucesso!");
             }
@@ -196,7 +195,7 @@ void clienteSis(){
         case 2:
             printf("Qual o numero do cliente que gostaria de alterar?");
             scanf("%d", &tel);
-            alterar = alterarCliente(cliente, &tamanho, tel);
+            alterar = alterarCliente(cliente, &tamanhoC, tel);
             if(alterar) {
                 printf("Alterado com sucesso!");
             }
@@ -204,13 +203,13 @@ void clienteSis(){
         case 3:
             printf("Qual o numero do cliente que gostaria de remover?");
             scanf("%d", &tel);
-            remover = removerCliente(cliente, &tamanho, tel);
+            remover = removerCliente(cliente, &tamanhoC, tel);
             if(remover){
                 printf("Removido com sucesso");
             }
             break;
         case 4:
-            //menuPizzas();
+            menuPizzas(pizza, &tamanhoP);
             break;
         case 5:
             //fazerPedido();
@@ -312,4 +311,27 @@ int removerCliente(CLIENTES *cliente, int *tamanho, int telRem) {
         }
     }
     return 0;
+}
+//Menu de pizzas
+void menuPizzas(PIZZAS *pizza, int *tamanho) {
+    int menor;
+    //ordenando de forma crescente pelo ID
+    for(int i = 0; i < *tamanho - 1; i++) {
+        menor = pizza[i].id;
+        for (int j = i + 1; j < *tamanho; j++) {
+            if (pizza[j].id < pizza[menor].id) {
+                menor = j;
+            }
+        }
+        PIZZAS cresc = pizza[menor];
+        pizza[menor] = pizza[i];
+        pizza[i] = cresc;
+    }
+    //imprimindo em ordem crescente
+    for(int i = 0; i < *tamanho; i++) {
+        printf("ID: %d\n", pizza[i].id);
+        printf("Valor: %.2f\n", pizza[i].valor);
+        printf("Nome: %s\n", pizza[i].nome);
+        printf("Descricao: %s\n", pizza[i].desc);
+    }
 }
