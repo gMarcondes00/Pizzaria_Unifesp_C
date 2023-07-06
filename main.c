@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 //Definindo as structs a serem utilizadas
 typedef struct {
     int tel, numCasa;
@@ -99,7 +100,7 @@ int pizzariaSis(){
             despachoPizza(pedido, &tamanhoPe);
             break;
         case 5:
-            exibirEntrega();
+            exibirEntrega(pedido, &tamanhoPe);
             break;
         case 6:
             //exibirMontante();
@@ -182,14 +183,31 @@ void despachoPizza(PEDIDOS *pedido, int *tamanho) {
     int despache;
     printf("Id dos Pedidos:\n");
     for(int i = 0; i < *tamanho; i++) {
-        printf("%d\n", pedido[*tamanho]);
+        printf("%d\n", pedido[i].id);
     }
     printf("Qual pedido despachar? ");
     scanf("%d", &despache);
     for(int i = 0; i < *tamanho; i++) {
         if(despache == pedido[i].id){
-            pedido[i].entrega = rand() % 100;
+            pedido[i].entrega = rand() % 10;
             pedido[i].situ = 2;
+        }
+    }
+}
+
+void exibirEntrega(PEDIDOS *pedido, int *tamanho) {
+    for (int i = 0; i < *tamanho; i++) {
+        if (pedido[i].situ > 1) {
+            int entregas = 0;
+            int entregador = pedido[i].entrega;
+            
+            for (int j = 0; j < *tamanho; j++) {
+                if (entregador == pedido[j].entrega) {
+                    entregas++;
+                }
+            }
+            
+            printf("O entregador com ID %d tem %d entregas\n", entregador, entregas);
         }
     }
 }
@@ -356,19 +374,19 @@ void menuPizzas(PIZZAS *pizza, int *tamanho) {
     }
 }
 
-int fazerPedido(PEDIDOS *pedido, int *tamanhoPe) {
+int fazerPedido(PEDIDOS *pedido, int *tamanho) {
     int tel, idPizza;
     printf("Qual o telefone do cliente? ");
-    scanf("%[^/n]", &tel);
+    scanf("%d", &tel);
     printf("Qual o ID da pizza? ");
     scanf("%d", &idPizza);
-    pedido[*tamanhoPe].telC = tel;
-    pedido[*tamanhoPe].idPizza = idPizza;
-    pedido[*tamanhoPe].situ = 1;
-    pedido[*tamanhoPe].entrega = 0;
-    pedido[*tamanhoPe].id = *tamanhoPe;
-    pedido[*tamanhoPe].nota = 0;
+    pedido[*tamanho].telC = tel;
+    pedido[*tamanho].idPizza = idPizza;
+    pedido[*tamanho].situ = 1;
+    pedido[*tamanho].entrega = 0;
+    pedido[*tamanho].id = *tamanho;
+    pedido[*tamanho].nota = 0;
 
-    *tamanhoPe++;
+    (*tamanho)++;
     return 0;
 }
