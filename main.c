@@ -13,7 +13,7 @@ typedef struct {
     float valor;
     char nome[10];
     char desc[25];
-}PIZZAS; PIZZAS pizza[10]; int tamanhoP = 0, montante = 0;
+}PIZZAS; PIZZAS pizza[10]; int tamanhoP = 0, venda = 0; float montante = 0;
 
 typedef struct {
     int id, idPizza, entrega, situ, telC, nota;
@@ -26,6 +26,7 @@ int alterarPizza(PIZZAS *pizza,int *tamanho, int idAlt); //Função para alterar
 int removerPizza(PIZZAS *pizza,int *tamanho, int idRem); //Função remover pizza a partir de ID
 void despachoPizza(PEDIDOS *pedido, int *tamanho); //Função que apresenta num de pedidos 
 void exibirEntrega(PEDIDOS *pedido, int *tamanho); //Função para exibir as entregas a partir do id do entregador
+void exibirMontante(int *venda, float *montate); //Exibir montante e total de pizzas vendidas
 
 //USUARIO (cliente)
 int clienteSis(); //Função para cadastrar clientes e fazer pedidos
@@ -33,7 +34,7 @@ int cadastroCliente(CLIENTES *cliente, int *tamanho); //Função para cadastrar 
 int alterarCliente(CLIENTES *cliente,int *tamanho, int telAlt); //Função para alterar dados do cliente
 int removerCliente(CLIENTES *cliente, int *tamanho, int telRem); //Função para remover cliente a partir de ID
 void menuPizzas(PIZZAS *pizza, int *tamanho); //Função ver menu de pizzas ordenadas pelo ID
-int fazerPedido(PEDIDOS *pedido, int *tamanho); //Função para fazer um pedido
+int fazerPedido(PEDIDOS *pedido, PIZZAS *pizza, int *tamanhoPe, int *tamanhoPi, float *montante, int *venda); //Função para fazer um pedido
 void receberPedido(PEDIDOS *pedido, int *tamanho); //Função para dar uma nota ao pedido
 
 int main (){
@@ -104,7 +105,7 @@ int pizzariaSis(){
             exibirEntrega(pedido, &tamanhoPe);
             break;
         case 6:
-            //exibirMontante();
+            exibirMontante(&venda, &montante);
             break;
         case 7:
             return escolha;
@@ -212,6 +213,10 @@ void exibirEntrega(PEDIDOS *pedido, int *tamanho) {
         }
     }
 }
+//Exibir montate e total de pizzas vendidas
+void exibirMontante(int *venda,float *montante) {
+    printf("%d pizzas vendidas\n%f valor em caixa", *venda, *montante);
+}
 // ----------------------------
 //        Seção Cliente
 // ----------------------------
@@ -250,7 +255,8 @@ int clienteSis(){
             menuPizzas(pizza, &tamanhoP);
             break;
         case 5:
-            fazerPedido(pedido, &tamanhoPe);
+        //int fazerPedido(PEDIDOS *pedido, PIZZAS *pizza, int *tamanhoPe, int *tamanhoPi, float *montante);
+            fazerPedido(pedido, pizza, &tamanhoPe, &tamanhoP, &montante, &venda);
             break;
         case 6:
             receberPedido(pedido, &tamanhoPe);
@@ -374,21 +380,27 @@ void menuPizzas(PIZZAS *pizza, int *tamanho) {
         printf("Descricao: %s\n", pizza[i].desc);
     }
 }
-
-int fazerPedido(PEDIDOS *pedido, int *tamanho) {
+//int fazerPedido(PEDIDOS *pedido, PIZZAS *pizza, int *tamanhoPe, int *tamanhoPi, float *montante);
+int fazerPedido(PEDIDOS *pedido, PIZZAS *pizza, int *tamanhoPe, int *tamanhoPi, float *montante, int *venda) {
     int tel, idPizza;
     printf("Qual o telefone do cliente? ");
     scanf("%d", &tel);
     printf("Qual o ID da pizza? ");
     scanf("%d", &idPizza);
-    pedido[*tamanho].telC = tel;
-    pedido[*tamanho].idPizza = idPizza;
-    pedido[*tamanho].situ = 1;
-    pedido[*tamanho].entrega = 0;
-    pedido[*tamanho].id = *tamanho;
-    pedido[*tamanho].nota = 0;
+    pedido[*tamanhoPe].telC = tel;
+    pedido[*tamanhoPe].idPizza = idPizza;
+    pedido[*tamanhoPe].situ = 1;
+    pedido[*tamanhoPe].entrega = 0;
+    pedido[*tamanhoPe].id = *tamanhoPe;
+    pedido[*tamanhoPe].nota = 0;
 
-    (*tamanho)++;
+    for(int i = 0; i < *tamanhoPi; i++){
+        if(idPizza == pizza[i].id) {
+            (*montante) += pizza[i].valor;
+        }
+    }
+    (*venda)++;
+    (*tamanhoPe)++;
     return 0;
 }
 //Receber e dar uma nota ao pedido
